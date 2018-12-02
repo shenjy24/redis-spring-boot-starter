@@ -1,4 +1,4 @@
-package com.yushi.redis.service;
+package com.jonas.redis.service;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

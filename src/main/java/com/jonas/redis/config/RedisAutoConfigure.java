@@ -1,6 +1,6 @@
-package com.yushi.redis.config;
+package com.jonas.redis.config;
 
-import com.yushi.redis.service.RedisService;
+import com.jonas.redis.service.RedisService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
