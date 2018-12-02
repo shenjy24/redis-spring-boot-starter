@@ -26,6 +26,8 @@ spring:
         max-wait: -1s
         max-idle: 8
         min-idle: 0
+  main:
+      allow-bean-definition-overriding: true
 ```
 3.简单例子
 ```java
