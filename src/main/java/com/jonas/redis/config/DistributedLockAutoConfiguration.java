@@ -1,39 +1,29 @@
 package com.jonas.redis.config;
 
-import com.jonas.redis.service.RedisService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import com.jonas.redis.service.lock.DistributedLock;
+import com.jonas.redis.service.lock.RedisDistributedLock;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * 【 enter the class description 】
+ * 分布式锁配置
  *
- * @author shenjy 2018/11/19
+ * @author shenjy 2019/02/28
  */
 @Configuration
-@EnableCaching
-@ConditionalOnClass(RedisOperations.class)
-@EnableConfigurationProperties(RedisProperties.class)
-public class RedisAutoConfigure {
+@AutoConfigureAfter(RedisAutoConfiguration.class)
+public class DistributedLockAutoConfiguration {
 
     @Bean
-    public RedisService redisService() {
-        return new RedisService();
-    }
-
-    @Bean(name = "redisTemplate")
-    @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
@@ -56,4 +46,11 @@ public class RedisAutoConfigure {
                 RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(factory);
         return builder.build();
     }
+
+    @Bean
+    @ConditionalOnBean(RedisTemplate.class)
+    public DistributedLock redisDistributedLock(RedisTemplate redisTemplate){
+        return new RedisDistributedLock(redisTemplate);
+    }
+
 }

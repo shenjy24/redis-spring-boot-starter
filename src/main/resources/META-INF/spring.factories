@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.jonas.redis.config.RedisAutoConfigure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.jonas.redis.config.DistributedLockAutoConfiguration,\
+com.jonas.redis.config.DistributedLockAspectConfiguration
