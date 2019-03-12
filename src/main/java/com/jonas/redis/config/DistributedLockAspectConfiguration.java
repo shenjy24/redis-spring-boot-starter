@@ -41,11 +41,7 @@ public class DistributedLockAspectConfiguration {
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         RedisLock redisLock = method.getAnnotation(RedisLock.class);
-        String key = redisLock.value();
-        if(StringUtils.isEmpty(key)){
-            Object[] args = pjp.getArgs();
-            key = Arrays.toString(args);
-        }
+        String key = method.getName() + ":" + Arrays.toString(pjp.getArgs());
         int retryTimes = redisLock.action().equals(RedisLock.LockFailAction.CONTINUE) ? redisLock.retryTimes() : 0;
         boolean lock = distributedLock.lock(key, redisLock.keepMills(), retryTimes, redisLock.sleepMills());
         if (!lock) {

@@ -11,14 +11,12 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface RedisLock {
-    /** 锁的资源，redis的key*/
-    String value() default "default";
 
     /** 持锁时间,单位毫秒*/
     long keepMills() default 30000;
 
     /** 当获取失败时候动作*/
-    LockFailAction action() default LockFailAction.CONTINUE;
+    LockFailAction action() default LockFailAction.GIVEUP;
 
     enum LockFailAction{
         /** 放弃 */
